@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="ang.js"></script>
+  </head>
+  <body ng-app="app" ng-controller="cc">
+
+<form ng-submit="sub()">
+    <input type="text" name="" id="" ng-model="data.name">
+    <input type="text" name="" id="" ng-model="data.pass">
+<button type="submit">submit</button>
+</form>
+    <table>
+      <input type="text" ng-model="search" name="" id="" />
+      <tr>
+        <td>name</td>
+        <td>pass</td>
+      </tr>
+      <tr ng-repeat="i in list | filter: search">
+        <td>{{i.name}}</td>
+        <td>
+          <input type="button" ng-click="del(i)" value="show" name="" id="" />
+        </td>
+        <td>
+          <input type="button" ng-click="display(i)" value="del" name="" id="" />
+        </td>
+      </tr>
+      <tr>
+        <td>{{pass}}</td>
+      </tr>
+    </table>
+    <script>
+      const app = angular.module("app", []);
+      app.controller("cc", function ($scope, $http) {
+        $scope.list = [];
+        $scope.pass = "";
+        $scope.name = "";
+$scope.data={}
+        $scope.getdata = function () {
+          $http.get("/data").then((res) => {
+            console.log(res.data);
+            $scope.list = res.data;
+          });
+        };
+
+$scope.sub=()=>{
+    $http.post("/data",$scope.data).then((res)=>{
+console.log(res.data)
+    })
+}
+
+
+
+        $scope.display=(item)=>{
+$scope.pass=item.pass
+        }
+
+        $scope.del = (item) => {
+          $http.delete(`/data/${item._id}`).then((res) => {
+            $scope.list = res.data;
+            $scope.getdata();
+          });
+        };
+
+        $scope.getdata();
+      });
+    </script>
+  </body>
+</html>
